@@ -1,0 +1,116 @@
+<div class="animated fadeIn">
+  <div class="card">
+    <div class="card-header-blue">
+      <span class="font-weight-bold mt-2">
+        {{ title }} Data Entry
+      </span>
+    </div>
+    <div class="card-body">
+      <form
+        (ngSubmit)="onSubmit()"
+        [formGroup]="form"
+      >
+        <div class="row">
+          <div class="col-12 col-sm-6">
+
+            <!-- Customer Data -->
+            <fieldset class="form-group">
+              <label class="col-form-label required" for="customerData">Customer Data</label>
+              <input
+                [class.is-invalid]="isFieldInvalid(form, 'customerData')"
+                class="form-control"
+                formControlName="customerData"
+                id="customerData"
+                name="customerData"
+                required
+                type="text"
+              />
+              <ng-container *ngIf="isFieldInvalid(form,'customerData')">
+                <div *ngIf="form.get('customerData').hasError('required')" class="invalid-feedback">
+                  Customer Data is required
+                </div>
+              </ng-container>
+            </fieldset>
+
+            <!-- Facility Data -->
+            <fieldset class="form-group">
+              <label class="col-form-label required" for="facilityData">Facility Data</label>
+              <input
+                [class.is-invalid]="isFieldInvalid(form, 'facilityData')"
+                class="form-control"
+                formControlName="facilityData"
+                id="facilityData"
+                name="facilityData"
+                required
+                type="text"
+              />
+              <ng-container *ngIf="isFieldInvalid(form,'facilityData')">
+                <div *ngIf="form.get('facilityData').hasError('required')" class="invalid-feedback">
+                  Facility Data is required
+                </div>
+              </ng-container>
+            </fieldset>
+
+            <!-- Broker Data -->
+            <fieldset class="form-group">
+              <label class="col-form-label required" for="brokerData">Broker Data</label>
+              <input
+                [class.is-invalid]="isFieldInvalid(form, 'brokerData')"
+                class="form-control"
+                formControlName="brokerData"
+                id="brokerData"
+                name="brokerData"
+                required
+                type="text"
+              />
+              <ng-container *ngIf="isFieldInvalid(form,'brokerData')">
+                <div *ngIf="form.get('brokerData').hasError('required')" class="invalid-feedback">
+                  Broker Data is required
+                </div>
+              </ng-container>
+            </fieldset>
+
+            <!-- insuranceComp Data -->
+            <fieldset class="form-group">
+              <label class="col-form-label required" for="insuranceCompData">Insurance Company Data</label>
+              <input
+                [class.is-invalid]="isFieldInvalid(form, 'insuranceCompData')"
+                class="form-control"
+                formControlName="insuranceCompData"
+                id="insuranceCompData"
+                name="insuranceCompData"
+                required
+                type="text"
+              />
+              <ng-container *ngIf="isFieldInvalid(form,'insuranceCompData')">
+                <div *ngIf="form.get('insuranceCompData').hasError('required')" class="invalid-feedback">
+                  Insurance Company Data is required
+                </div>
+              </ng-container>
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col form-group">
+            <div class="form-actions submit-button mt-5">
+              <ng-template [ngIfElse]="falseEditable" [ngIf]="editable">
+                <button class="btn btn-sm btn-primary" type="submit">
+                  <i class="fa fa-check"></i> Submit
+                </button>&nbsp;
+              </ng-template>
+              <ng-template #falseEditable>
+                <button [routerLink]="['edit']" class="btn btn-sm btn-success" type="button">
+                  <i class="fa fa-edit"></i> Edit
+                </button>&nbsp;
+              </ng-template>
+              <button (click)="location.back()" class="btn btn-sm btn-secondary cancel-buttons" type="button">
+                <i class="fa fa-close"></i> Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

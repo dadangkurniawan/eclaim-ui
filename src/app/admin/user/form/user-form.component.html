@@ -1,0 +1,235 @@
+<div class="animated fadeIn">
+  <div class="card">
+    <div class="card-header-blue">
+      <span class="font-weight-bold mt-2">
+          {{ title }} User
+      </span>
+    </div>
+    <div class="card-body">
+      <form
+        (ngSubmit)="onSubmit()"
+        [formGroup]="form"
+        autocomplete="off"
+      >
+        <div class="row">
+          <h3 class="col-12">User</h3>
+          <div class="col-12">
+            <hr/>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12 col-sm-6">
+
+            <!-- Username -->
+            <fieldset class="form-group">
+              <label class="col-form-label required" for="username">
+                Username
+              </label>
+              <input
+                [class.is-invalid]="isFieldInvalid(form, 'username')"
+                class="form-control"
+                formControlName="username"
+                id="username"
+                name="username"
+                pattern="^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?![_.])$"
+                required
+                type="text"
+              />
+              <ng-container *ngIf="isFieldInvalid(form, 'username')">
+                <div *ngIf="form.get('username').hasError('required')" class="invalid-feedback">
+                  Username is required
+                </div>
+                <div *ngIf="form.get('username').hasError('pattern')" class="invalid-feedback">
+                  Username minimal 8 alphanumerics characters
+                </div>
+              </ng-container>
+            </fieldset>
+
+            <!-- Auth Provider -->
+            <fieldset class="form-group">
+              <label class="col-form-label required" for="auth-provider">
+                Auth Provider
+              </label>
+              <ng-select
+                (change)="onAuthenticationChange($event)"
+                [class.is-invalid]="isFieldInvalid(form, 'authProvider')"
+                [items]="selectAuthProvider"
+                [virtualScroll]="true"
+                bindLabel="name"
+                bindValue="value"
+                class="form-control"
+                formControlName="authProvider"
+                id="auth-provider"
+                required
+              >
+              </ng-select>
+              <ng-container *ngIf="isFieldInvalid(form, 'authProvider')">
+                <div *ngIf="form.get('authProvider').hasError('required')" class="invalid-feedback">
+                  Auth Provider is required
+                </div>
+              </ng-container>
+            </fieldset>
+
+          </div>
+          <div class="col-12 col-sm-6">
+
+            <!-- Description -->
+            <fieldset class="form-group">
+              <label class="col-form-label" for="description">
+                Description
+              </label>
+              <textarea
+                class="form-control"
+                formControlName="description"
+                id="description"
+                name="description"
+                rows="6"
+              ></textarea>
+            </fieldset>
+
+          </div>
+        </div>
+        <div class="row">
+
+          <!-- Active Flag -->
+          <fieldset class="col-12 col-sm-6 form-group">
+            <label class="col-form-label" for="active-flag">Active Flag</label>
+            <div class="active-pills">
+              <label class="switch switch-label switch-pill switch-primary">
+                <input
+                  class="switch-input form-control"
+                  formControlName="activeFlag"
+                  id="active-flag"
+                  type="checkbox"
+                />
+                <span
+                  class="switch-slider"
+                  data-checked="On"
+                  data-unchecked="Off"
+                ></span>
+              </label>
+            </div>
+          </fieldset>
+
+          <!-- Locked -->
+          <fieldset class="col-12 col-sm-6 form-group">
+            <label class="col-form-label" for="locked">Locked</label>
+            <div class="active-pills">
+              <label class="switch switch-label switch-pill switch-danger">
+                <input
+                  class="switch-input form-control"
+                  formControlName="locked"
+                  id="locked"
+                  type="checkbox"
+                />
+                <span
+                  class="switch-slider"
+                  data-checked="On"
+                  data-unchecked="Off"
+                ></span>
+              </label>
+            </div>
+          </fieldset>
+
+        </div>
+        <div class="row mt-5">
+          <h3 class="col-12">
+            <ng-template [ngIf]="editable && title !== 'Add'">Change&nbsp;</ng-template>
+            Password
+          </h3>
+          <div class="col-12">
+            <hr/>
+          </div>
+        </div>
+
+        <div class="row">
+
+          <!-- Password -->
+          <fieldset class="col-12 form-group">
+            <label
+              [class.required]="title === 'Add' && form.get('password').enabled"
+              class="col-form-label"
+              for="password"
+            >
+              Password
+            </label>
+            <input
+                #passwordInput
+                (keyup)="onChangePassword($event)"
+                [class.is-invalid]="isFieldInvalid(form, 'password')"
+                autocomplete="new-password"
+                class="form-control"
+                formControlName="password"
+                id="password"
+                name="password"
+                type="password"
+            />
+            <ng-container *ngIf="form.get('password').errors">
+              <div *ngIf="form.get('password').hasError('minlength')" class="invalid-feedback">
+                Password must be at least 8 characters.
+              </div>
+              <div *ngIf="form.get('password').hasError('required')" class="invalid-feedback">
+                Password is required
+              </div>
+            </ng-container>
+          </fieldset>
+
+          <!-- Confirm Password -->
+          <fieldset class="col-12 form-group">
+            <label
+              [class.required]="(title === 'Add' || passwordInput.value?.length >= 1) && form.get('confirmPassword').enabled"
+              class="col-form-label"
+              for="confirm-password"
+            >
+              Confirm Password
+            </label>
+            <input
+              [class.is-invalid]="isFieldInvalid(form, 'confirmPassword')"
+              class="form-control"
+              formControlName="confirmPassword"
+              id="confirm-password"
+              name="confirm-password"
+              type="password"
+            />
+            <ng-container *ngIf="form.get('confirmPassword').errors">
+              <div *ngIf="form.get('confirmPassword').hasError('required')" class="invalid-feedback">
+                Password confirmation is required
+              </div>
+              <div *ngIf="form.get('confirmPassword').hasError('mustMatch')" class="invalid-feedback">
+                Password doesn't match
+              </div>
+            </ng-container>
+          </fieldset>
+
+        </div>
+        <div class="row">
+          <div class="col form-group">
+            <div class="form-actions submit-button mt-5">
+              <ng-template [ngIfElse]="falseEditable" [ngIf]="editable">
+                <button class="btn btn-sm btn-primary" type="submit">
+                  <i class="fa fa-check"></i> Submit
+                </button>&nbsp;
+              </ng-template>
+              <ng-template #falseEditable>
+                <button [routerLink]="['edit']" class="btn btn-sm btn-success" type="button">
+                  <i class="fa fa-edit"></i>
+                  Edit
+                </button>&nbsp;
+              </ng-template>
+              <button (click)="location.back()" class="btn btn-sm btn-secondary cancel-buttons" type="button">
+                <i class="fa fa-close"></i>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<user-role-table *ngIf="title !== 'Add'" [editable]="editable"></user-role-table>
+
+<user-organization-table *ngIf="title !== 'Add'" [editable]="editable"></user-organization-table>

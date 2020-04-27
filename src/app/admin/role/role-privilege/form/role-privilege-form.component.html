@@ -1,0 +1,153 @@
+<div class="animated fadeIn">
+  <div class="card">
+    <div class="card-header-blue">
+      <span class="font-weight-bold mt-2">
+        {{ title }}
+      </span>
+    </div>
+    <div class="card-body">
+      <form
+        (ngSubmit)="onSubmit()"
+        [formGroup]="form"
+      >
+        <div class="row">
+
+          <!-- Privilege -->
+          <fieldset class="col-12 form-group">
+            <label class="col-form-label required" for="privilege">Privilege</label>
+            <ng-select
+              [class.is-invalid]="isFieldInvalid(form, 'privilegeId')"
+              [items]="privileges"
+              [typeahead]="privilegeTypeahead$"
+              (focus)="privilegeTypeahead$.next()"
+              [loading]="privilageLoading"
+              bindLabel="name"
+              bindValue="id"
+              class="form-control"
+              formControlName="privilegeId"
+              id="privilege"
+            >
+              <ng-template let-searchTerm="searchTerm" ng-notfound-tmp>
+                <div class="ng-option disabled">
+                  No data found for "{{ searchTerm }}"
+                </div>
+              </ng-template>
+              <ng-template let-searchTerm="searchTerm" ng-loadingtext-tmp>
+                <div class="ng-option disabled">
+                  Fetching data for "{{ searchTerm }}"
+                </div>
+              </ng-template>
+            </ng-select>
+            <ng-container *ngIf="isFieldInvalid(form, 'privilegeId')">
+              <div *ngIf="form.get('privilegeId').hasError('required')" class="invalid-feedback">
+                Menu is required
+              </div>
+            </ng-container>
+          </fieldset>
+
+          <!-- Can Create -->
+          <fieldset class="col-md-3 col-12 form-group">
+            <label class="col-form-label" for="can-create">Create</label>
+            <div class="active-pills">
+              <label class="switch switch-label switch-pill switch-primary">
+                <input
+                  class="switch-input form-control"
+                  formControlName="canCreate"
+                  id="can-create"
+                  type="checkbox"
+                />
+                <span
+                  class="switch-slider"
+                  data-checked="On"
+                  data-unchecked="Off"
+                ></span>
+              </label>
+            </div>
+          </fieldset>
+
+          <!-- Can Read -->
+          <fieldset class="col-md-3 col-12 form-group">
+            <label class="col-form-label" for="can-read">Read</label>
+            <div class="active-pills">
+              <label class="switch switch-label switch-pill switch-primary">
+                <input
+                  class="switch-input form-control"
+                  formControlName="canRead"
+                  id="can-read"
+                  type="checkbox"
+                />
+                <span
+                  class="switch-slider"
+                  data-checked="On"
+                  data-unchecked="Off"
+                ></span>
+              </label>
+            </div>
+          </fieldset>
+
+          <!-- Can Update -->
+          <fieldset class="col-md-3 col-12 form-group">
+            <label class="col-form-label" for="can-read">Update</label>
+            <div class="active-pills">
+              <label class="switch switch-label switch-pill switch-primary">
+                <input
+                  class="switch-input form-control"
+                  formControlName="canUpdate"
+                  id="can-update"
+                  type="checkbox"
+                />
+                <span
+                  class="switch-slider"
+                  data-checked="On"
+                  data-unchecked="Off"
+                ></span>
+              </label>
+            </div>
+          </fieldset>
+
+          <!-- Can Delete -->
+          <fieldset class="col-md-3 col-12 form-group">
+            <label class="col-form-label" for="can-delete">Delete</label>
+            <div class="active-pills">
+              <label class="switch switch-label switch-pill switch-primary">
+                <input
+                  class="switch-input form-control"
+                  formControlName="canDelete"
+                  id="can-delete"
+                  type="checkbox"
+                />
+                <span
+                  class="switch-slider"
+                  data-checked="On"
+                  data-unchecked="Off"
+                ></span>
+              </label>
+            </div>
+          </fieldset>
+
+        </div>
+
+        <div class="row">
+          <div class="col form-group">
+            <div class="form-actions submit-button mt-5">
+              <ng-template [ngIfElse]="falseEditable" [ngIf]="editable">
+                <button class="btn btn-sm btn-primary" type="submit">
+                  <i class="fa fa-check"></i> Submit
+                </button>&nbsp;
+              </ng-template>
+              <ng-template #falseEditable>
+                <button [routerLink]="['edit']" class="btn btn-sm btn-success" type="button">
+                  <i class="fa fa-edit"></i> Edit
+                </button>&nbsp;
+              </ng-template>
+              <button (click)="location.back()" class="btn btn-sm btn-secondary cancel-buttons" type="button">
+                <i class="fa fa-close"></i>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

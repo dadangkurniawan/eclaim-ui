@@ -1,0 +1,246 @@
+<div class="animated fadeIn">
+  <div class="card">
+    <div class="card-header-blue">
+      <div class="clearfix">
+        <span class="float-left font-weight-bold mt-2">
+          Role Table
+        </span>
+        <div class="float-right">
+          <div class="row no-gutters">
+            <button class="btn btn-sm btn-success" routerLink="add" type="button">
+              <i class="fa fa-plus"></i>
+              &nbsp;Add New
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="row d-flex flex-row-reverse mb-2">
+        <div class="col-md-4">
+          <app-search-table
+            (onSearch)="getRole()"
+            [data]="data"
+            [page]="page"
+            [table]="table"
+          ></app-search-table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <ngx-datatable
+            #table
+            (page)="getRole($event.offset + 1)"
+            (sort)="sortTableFn(page, $event); getRole();"
+            [columnMode]="ColumnMode.force"
+            [count]="totalElements"
+            [externalPaging]="true"
+            [externalSorting]="true"
+            [footerHeight]="50"
+            [headerHeight]="50"
+            [limit]="page.size"
+            [loadingIndicator]="loadingIndicator"
+            [offset]="offset"
+            [rowHeight]="50"
+            [rows]="rows"
+            [scrollbarH]="true"
+            class="material striped"
+          >
+
+            <!-- Row Detail Template -->
+            <ngx-datatable-row-detail
+              [rowHeight]="150"
+            >
+              <ng-template
+                let-activeFlag="row.activeFlag"
+                let-description="row.description"
+                let-id="row.id"
+                let-name="row.name"
+                ngx-datatable-row-detail-template
+              >
+                <div style="padding-left: 60px; font-size: 14px">
+                  <div class="row mt-2">
+                    {{ description | ellipsis: 20 }}
+                  </div>
+                  <div class="row mt-2">
+                    <ng-template [ngIfElse]="falseInactive" [ngIf]="activeFlag === 'Y'">
+                      <span class="badge badge-success">Active</span>
+                    </ng-template>
+                    <ng-template #falseInactive>
+                      <span class="badge badge-danger">Inactive</span>
+                    </ng-template>
+                  </div>
+                  <div class="row mt-2">
+                    <button
+                      [routerLink]="[id]"
+                      class="btn btn-primary mr-1"
+                      data-placement="bottom"
+                      data-toggle="tooltip"
+                      title="detail"
+                      type="button"
+                    >
+                      <i class="fa fa-eye fa-sm"></i>
+                    </button>&nbsp;
+                    <button
+                      [routerLink]="[id, 'edit']"
+                      class="btn btn-success mr-1"
+                      data-placement="bottom"
+                      data-toggle="tooltip"
+                      title="edit"
+                      type="button"
+                    >
+                      <i class="fa fa-edit fa-sm"></i>
+                    </button>&nbsp;
+                    <button
+                      (confirm)="inactivateRole(id)"
+                      [disabled]="activeFlag === 'N'"
+                      [swal]="{
+                        titleText: 'Inactivate Role',
+                        text: 'Do you want to inactivate ' + name + '?',
+                        icon: 'warning',
+                        showCancelButton: true
+                      }"
+                      class="btn btn-danger"
+                      data-placement="bottom"
+                      data-toggle="tooltip"
+                      title="inactivate"
+                      type="button"
+                    >
+                      <i class="fa fa-trash fa-sm"></i>
+                    </button>
+                  </div>
+                </div>
+              </ng-template>
+            </ngx-datatable-row-detail>
+
+            <!-- Arrow Detail Templates -->
+            <ngx-datatable-column
+              [cellClass]="'d-sm-none'"
+              [draggable]="false"
+              [headerClass]="'d-sm-none'"
+              [sortable]="false"
+              [width]="50"
+            >
+              <ng-template
+                let-expanded="expanded"
+                let-row="row"
+                ngx-datatable-cell-template
+              >
+                <a
+                  (click)="table.rowDetail.toggleExpandRow(row)"
+                  [class.datatable-icon-down]="expanded"
+                  [class.datatable-icon-right]="!expanded"
+                  title="Expand/Collapse Row"
+                >
+                </a>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <!-- Name -->
+            <ngx-datatable-column
+              [draggable]="false"
+              [sortable]="true"
+              name="Name"
+              prop="name"
+            >
+              <ng-template let-value="value" ngx-datatable-cell-template>
+                {{ value | ellipsis: 15 }}
+              </ng-template>
+            </ngx-datatable-column>
+
+            <!-- Description -->
+            <ngx-datatable-column
+              [cellClass]="'d-none d-lg-inline'"
+              [draggable]="false"
+              [headerClass]="'d-none d-lg-inline'"
+              [sortable]="true"
+              name="Description"
+              prop="description"
+            >
+              <ng-template let-value="value" ngx-datatable-cell-template>
+                {{ value | ellipsis: 30 }}
+              </ng-template>
+            </ngx-datatable-column>
+
+            <!-- Active Flag -->
+            <ngx-datatable-column
+              [cellClass]="'d-none d-md-inline'"
+              [draggable]="false"
+              [headerClass]="'d-none d-md-inline'"
+              [sortable]="true"
+              name="Active"
+              prop="activeFlag"
+            >
+              <ng-template
+                let-value="value"
+                ngx-datatable-cell-template
+              >
+                <ng-template [ngIfElse]="falseInactive" [ngIf]="value === 'Y'">
+                  <span class="badge badge-success">Active</span>
+                </ng-template>
+                <ng-template #falseInactive>
+                  <span class="badge badge-danger">Inactive</span>
+                </ng-template>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <!-- Action -->
+            <ngx-datatable-column
+              [cellClass]="'d-none d-md-inline'"
+              [draggable]="false"
+              [headerClass]="'d-none d-md-inline'"
+              [sortable]="false"
+              name="Action"
+            >
+              <ng-template
+                let-activeFlag="row.activeFlag"
+                let-id="row.id"
+                let-name="row.name"
+                ngx-datatable-cell-template
+              >
+                <button
+                  [routerLink]="[id]"
+                  class="btn btn-sm btn-primary"
+                  data-placement="bottom"
+                  data-toggle="tooltip"
+                  title="detail"
+                  type="button"
+                >
+                  <i class="fa fa-eye fa-sm"></i>
+                </button>&nbsp;
+                <button
+                  [routerLink]="[id, 'edit']"
+                  class="btn btn-sm btn-success"
+                  data-placement="bottom"
+                  data-toggle="tooltip"
+                  title="edit"
+                  type="button"
+                >
+                  <i class="fa fa-edit fa-sm"></i>
+                </button>&nbsp;
+                <button
+                  (confirm)="inactivateRole(id)"
+                  [disabled]="activeFlag === 'N'"
+                  [swal]="{
+                    titleText: 'Inactivate Role',
+                    text: 'Do you want to inactivate ' + name + '?',
+                    icon: 'warning',
+                    showCancelButton: true
+                  }"
+                  class="btn btn-sm btn-danger"
+                  data-placement="bottom"
+                  data-toggle="tooltip"
+                  title="inactivate"
+                  type="button"
+                >
+                  <i class="cui-lock-locked icons"></i>
+                </button>
+              </ng-template>
+            </ngx-datatable-column>
+
+          </ngx-datatable>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

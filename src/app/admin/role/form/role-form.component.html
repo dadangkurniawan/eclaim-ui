@@ -1,0 +1,103 @@
+<div class="animated fadeIn">
+  <div class="card">
+    <div class="card-header-blue">
+      <span class="font-weight-bold mt-2">
+        {{ title }} Role
+      </span>
+    </div>
+    <div class="card-body">
+      <form
+        (ngSubmit)="onSubmit()"
+        [formGroup]="form"
+      >
+        <div class="row">
+
+          <!-- Name -->
+          <fieldset class="col-12 form-group">
+            <label class="col-form-label required" for="name">
+              Name
+            </label>
+            <input
+              [class.is-invalid]="isFieldInvalid(form, 'name')"
+              class="form-control"
+              formControlName="name"
+              id="name"
+              name="name"
+              required
+              type="text"
+            />
+            <ng-container *ngIf="isFieldInvalid(form, 'name')">
+              <div *ngIf="form.get('name').hasError('required')" class="invalid-feedback">
+                Name is required
+              </div>
+            </ng-container>
+          </fieldset>
+
+          <!-- Description -->
+          <fieldset class="col-12 form-group">
+            <label class="col-form-label" for="description">
+              Description
+            </label>
+            <textarea
+              class="form-control"
+              formControlName="description"
+              id="description"
+              name="description"
+              rows="2"
+            ></textarea>
+          </fieldset>
+
+          <!-- Active Flag -->
+          <fieldset class="col-12 form-group">
+            <label class="col-form-label" for="active-flag">
+              Active Flag
+            </label>
+            <div class="active-pills">
+              <label class="switch switch-label switch-pill switch-primary">
+                <input
+                  class="switch-input form-control"
+                  formControlName="activeFlag"
+                  id="active-flag"
+                  type="checkbox"
+                />
+                <span
+                  class="switch-slider"
+                  data-checked="On"
+                  data-unchecked="Off"
+                ></span>
+              </label>
+            </div>
+          </fieldset>
+
+        </div>
+        <div class="row">
+          <div class="col form-group">
+            <div class="form-actions submit-button mt-5">
+              <ng-template [ngIfElse]="falseEditable" [ngIf]="editable">
+                <button class="btn btn-sm btn-primary" type="submit">
+                  <i class="fa fa-check"></i> Submit
+                </button>&nbsp;
+              </ng-template>
+              <ng-template #falseEditable>
+                <button [routerLink]="['edit']" class="btn btn-sm btn-success" type="button">
+                  <i class="fa fa-edit"></i>
+                  Edit
+                </button>&nbsp;
+              </ng-template>
+              <button (click)="location.back()" class="btn btn-sm btn-secondary cancel-buttons" type="button">
+                <i class="fa fa-close"></i>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<role-module-table *ngIf="title !== 'Add'" [editable]="editable"></role-module-table>
+
+<role-menu-table *ngIf="title !== 'Add'" [editable]="editable"></role-menu-table>
+
+<role-privilege-table *ngIf="title !== 'Add'" [editable]="editable"></role-privilege-table>

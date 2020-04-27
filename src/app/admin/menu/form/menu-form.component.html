@@ -1,0 +1,234 @@
+<div class="animated fadeIn">
+  <div class="card">
+    <div class="card-header-blue">
+      <span class="font-weight-bold mt-2">
+        {{ title }} Menu
+      </span>
+    </div>
+    <div class="card-body">
+      <form
+        (ngSubmit)="onSubmit()"
+        [formGroup]="form"
+      >
+        <div class="row">
+          <div class="col-12 col-sm-6">
+
+            <!-- Name -->
+            <fieldset class="form-group">
+              <label class="col-form-label required" for="name">Name</label>
+              <input
+                [class.is-invalid]="isFieldInvalid(form, 'name')"
+                class="form-control"
+                formControlName="name"
+                id="name"
+                name="name"
+                required
+                type="text"
+              />
+              <ng-container *ngIf="isFieldInvalid(form,'name')">
+                <div *ngIf="form.get('name').hasError('required')" class="invalid-feedback">
+                  Name is required
+                </div>
+              </ng-container>
+            </fieldset>
+
+            <!-- Module -->
+            <fieldset class="form-group">
+              <label class="col-form-label" for="module-id">Module</label>
+              <ng-select
+                [items]="modules"
+                [typeahead]="moduleTypeahead$"
+                (focus)="moduleTypeahead$.next()"
+                [loading]="moduleLoading"
+                bindLabel="name"
+                bindValue="id"
+                formControlName="moduleId"
+                id="module-id"
+                placeholder="Select module"
+              >
+                <ng-template let-searchTerm="searchTerm" ng-notfound-tmp>
+                  <div class="ng-option disabled">
+                    No data found for "{{searchTerm}}"
+                  </div>
+                </ng-template>
+                <ng-template let-searchTerm="searchTerm" ng-loadingtext-tmp>
+                  <div class="ng-option disabled">
+                    Fetching data for "{{searchTerm}}"
+                  </div>
+                </ng-template>
+              </ng-select>
+            </fieldset>
+
+            <!-- Url -->
+            <fieldset class="form-group">
+              <label class="col-form-label" for="url">Url</label>
+              <input
+                class="form-control"
+                formControlName="url"
+                id="url"
+                name="url"
+                type="text"
+              />
+            </fieldset>
+
+            <!-- Icon -->
+            <fieldset class="form-group">
+              <label class="col-form-label" for="icon">Icon</label>
+              <ng-select
+                [items]="icons"
+                [virtualScroll]="true"
+                bindLabel="name"
+                bindValue="value"
+                formControlName="icon"
+                groupBy="groupName"
+                id="icon"
+                labelForId="icon"
+                placeholder="Select icon"
+              >
+                <ng-template
+                  let-name="item.name"
+                  let-value="item.value"
+                  ng-label-tmp
+                >
+                  <i [class]="'icons ' + value"></i>
+                  {{ name }}
+                </ng-template>
+                <ng-template
+                  let-groupName="item.groupName"
+                  let-index="index"
+                  ng-optgroup-tmp
+                >
+                  Group icons <b>"{{ groupName }}"</b>
+                </ng-template>
+                <ng-template
+                  let-name="item.name"
+                  let-value="item.value"
+                  ng-option-tmp
+                >
+                  <i [class]="'icons ' + value"></i>
+                  {{ name }}
+                </ng-template>
+              </ng-select>
+            </fieldset>
+
+            <!-- Order No. -->
+            <fieldset class="form-group">
+              <label class="col-form-label" for="order-no">Order No</label>
+              <input
+                class="form-control"
+                formControlName="orderNo"
+                id="order-no"
+                name="order-no"
+                type="number"
+              />
+            </fieldset>
+
+          </div>
+          <div class="col-12 col-sm-6">
+
+            <!-- Parent Menu -->
+            <fieldset class="form-group">
+              <label class="col-form-label" for="parent-id">Parent Menu</label>
+              <ng-select
+                [items]="menus"
+                [typeahead]="menuTypeahead$"
+                (focus)="menuTypeahead$.next()"
+                [loading]="parentMenuLoading"
+                bindLabel="name"
+                bindValue="id"
+                formControlName="parentId"
+                id="parent-id"
+                placeholder="Select parent"
+              >
+                <ng-template let-searchTerm="searchTerm" ng-notfound-tmp>
+                  <div class="ng-option disabled">
+                    No data found for "{{searchTerm}}"
+                  </div>
+                </ng-template>
+                <ng-template let-searchTerm="searchTerm" ng-loadingtext-tmp>
+                  <div class="ng-option disabled">
+                    Fetching data for "{{searchTerm}}"
+                  </div>
+                </ng-template>
+              </ng-select>
+            </fieldset>
+
+            <!-- Description -->
+            <fieldset class="form-group">
+              <label class="col-form-label" for="textarea-input">Description</label>
+              <textarea
+                class="form-control"
+                formControlName="description"
+                id="textarea-input"
+                name="textarea-input"
+                rows="9"></textarea>
+            </fieldset>
+          </div>
+        </div>
+        <div class="row">
+
+          <!-- Active Flag -->
+          <fieldset class="col-12 col-sm-6 form-group">
+            <label class="col-form-label" for="active-flag">Active Flag</label>
+            <div class="active-pills">
+              <label class="switch switch-label switch-pill switch-primary">
+                <input
+                  class="switch-input form-control"
+                  formControlName="activeFlag"
+                  id="active-flag"
+                  type="checkbox"
+                />
+                <span
+                  class="switch-slider"
+                  data-checked="On"
+                  data-unchecked="Off"
+                ></span>
+              </label>
+            </div>
+          </fieldset>
+
+          <!-- Title Flag -->
+          <fieldset class="col-sm-6 col-12 form-group">
+            <label class="col-form-label" for="title-flag">Title Flag</label>
+            <div class="active-pills">
+              <label class="switch switch-label switch-pill switch-primary">
+                <input
+                  class="switch-input form-control"
+                  formControlName="titleFlag"
+                  id="title-flag"
+                  type="checkbox"
+                />
+                <span
+                  class="switch-slider"
+                  data-checked="On"
+                  data-unchecked="Off"
+                ></span>
+              </label>
+            </div>
+          </fieldset>
+
+        </div>
+
+        <div class="row">
+          <div class="col form-group">
+            <div class="form-actions submit-button mt-5">
+              <ng-template [ngIfElse]="falseEditable" [ngIf]="editable">
+                <button class="btn btn-sm btn-primary" type="submit">
+                  <i class="fa fa-check"></i> Submit
+                </button>&nbsp;
+              </ng-template>
+              <ng-template #falseEditable>
+                <button [routerLink]="['edit']" class="btn btn-sm btn-success" type="button">
+                  <i class="fa fa-edit"></i> Edit
+                </button>&nbsp;
+              </ng-template>
+              <button (click)="location.back()" class="btn btn-sm btn-secondary cancel-buttons" type="button">
+                <i class="fa fa-close"></i> Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
